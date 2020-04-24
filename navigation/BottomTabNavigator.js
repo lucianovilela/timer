@@ -2,8 +2,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import * as React from 'react';
 
 import TabBarIcon from '../components/TabBarIcon';
-import HomeScreen from '../screens/HomeScreen';
-import LoginScreen from '../screens/login/Login';
+import FeedScreen from '../screens/FeedScreen';
+import LoginScreen from '../screens/LoginScreen';
 import CameraScreen from '../screens/CameraScreen'
 
 const BottomTab = createBottomTabNavigator();
@@ -13,16 +13,17 @@ export default function BottomTabNavigator({ navigation, route }) {
   // Set the header title on the parent stack navigator depending on the
   // currently active tab. Learn more in the documentation:
   // https://reactnavigation.org/docs/en/screen-options-resolution.html
-  navigation.setOptions({ headerTitle: getHeaderTitle(route) });
+  navigation.setOptions({  headerTitle: getHeaderTitle(route) });
 
   return (
     <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}>
       <BottomTab.Screen
         name="Home"
-        component={HomeScreen}
+        component={FeedScreen}
         options={{
           title: 'Feed',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="ios-flame" />,
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="ios-home" />,
+
         }
         }/>
 
@@ -30,8 +31,10 @@ export default function BottomTabNavigator({ navigation, route }) {
         name="Camera"
         component={CameraScreen}
         options={{
-          title: 'Camera',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="ios-flame" />,
+          title: '',
+          headerTitle:'Foto',
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="ios-add-circle-outline" />,
+          tabBarVisible:false
         }
         }/>
 
@@ -40,6 +43,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         component={LoginScreen}
         options={{
           title: 'Login',
+          
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="ios-log-in" />,
         }}
       />
