@@ -1,38 +1,36 @@
-import { View, Text, TextInput, Button, Alert,ToastAndroid } from "react-native";
+import { View, Text, TextInput, Button, Alert,AsyncStorage } from "react-native";
 
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import ProviderFirebase from "../providers/ProviderFirebase";
+import  PERSISTENCE from  "../constants/Persistence";
 
-const AuthScreen = (props) => {
-  const provider=ProviderFirebase.getInstance("/user");
+
+const AuthScreen = ({ navigation }) => {
 
   const [user, setUser] = useState({});
+  const provider= useRef();
+
+
+  useEffect( ()=>{
+      provider.current =  new ProviderFirebase("/user");
+  },[]);
  
-  const usuarioLogadoComSucesso=()=>{
-    Alert.alert("Logado", "Usuário logado com sucesso!")
-    setUser(provider.currentUser());
+  const usuarioLogadoComSucesso= async()=>{
+   // Alert.alert("Logado", "Usuário logado com sucesso!")
+    const user = await provider.current.currentUser();
+    await AsyncStorage.setItem(PERSISTENCE.USER,   JSON.stringify(user) );
+    await AsyncStorage.setItem(PERSISTENCE.TOKEN, await provider.current.getToken());
+    setUser(user);
+    
   }
 
   const login = async ()=>{
-    const msg = await provider.loginUser(info.email, info.senha);
-    console.warn(msg);
+    const msg = await provider.current.loginUser(info.email, info.senha);
+ 
     if(msg.operationType === "signIn")
         usuarioLogadoComSucesso();
-    
-    
-  }
-  const logon = async ()=>{
-    const msg = await provider.logonUser(info.email, info.senha);
-    console.debug(msg);
-    if(msg.operationType === "signIn")
-        usuarioLogadoComSucesso();
-
-  }
-  const reset = async ()=>{
-    const msg = await provider.resetPassword(info.email);
-    console.debug(msg);
   }
   const [info, setInfo] = useState({email:"lucianovilela@gmail.com", senha:"123456"});
 
@@ -50,7 +48,6 @@ const AuthScreen = (props) => {
           value={info.email}
           
           onChangeText={( text ) => {
-            console.debug(text);
             setInfo({...info, email:text});
           }}
         />
@@ -61,16 +58,12 @@ const AuthScreen = (props) => {
           value={info.senha}
           secureTextEntry
           onChangeText={( text ) => {
-            console.debug(text);
             setInfo({...info, senha:text});
           }}
         />
       </View>
       <View>
-        
         <Button title="entrar" onPress={login} />
-        <Button title="cadastrar" onPress={logon} />
-        <Button title="esqueceu a senha" onPress={reset}/>
       </View>
     </React.Fragment>
   );

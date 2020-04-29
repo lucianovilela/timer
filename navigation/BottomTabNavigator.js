@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import TabBarIcon from '../components/TabBarIcon';
 import FeedScreen from '../screens/FeedScreen';
-import LoginScreen from '../screens/LoginScreen';
+import AuthScreen from '../screens/AuthScreen';
 import CameraScreen from '../screens/CameraScreen'
 
 const BottomTab = createBottomTabNavigator();
@@ -40,7 +40,7 @@ export default function BottomTabNavigator({ navigation, route }) {
 
       <BottomTab.Screen
         name="Login"
-        component={LoginScreen}
+        component={AuthScreen}
         options={{
           title: 'Login',
           

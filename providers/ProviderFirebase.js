@@ -1,7 +1,7 @@
-import * as firebase from "firebase/app";
-import "firebase/firestore";
-import "firebase/auth";
-
+import  * as firebase  from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore';
+ 
 const firebaseConfig = {
   apiKey: "AIzaSyDxd4H8o1ihfgeWpym6RnrmLY2-8yMSWzE",
   authDomain: "pesquisa-fbda8.firebaseapp.com",
@@ -11,27 +11,21 @@ const firebaseConfig = {
   messagingSenderId: "384123874840",
   appId: "1:384123874840:web:fecddbb4c0177b2024dd6d",
 };
-
-
+const app = firebase.initializeApp(firebaseConfig,"pesquisa");
 
 export default class ProviderFirebase {
-  constructor() {
-      console.debug(firebase.length);
-  }
-  static getInstance(PATH){
-
-    if(!ProviderFirebase.instance){
-      ProviderFirebase.instance = new ProviderFirebase();
-      ProviderFirebase.instance.app =firebase.initializeApp(firebaseConfig, "pesquisa"); 
-      ProviderFirebase.instance.db = ProviderFirebase.instance.app.firestore();
-      ProviderFirebase.instance.auth = ProviderFirebase.instance.app.auth();
-      ProviderFirebase.instance.PATH = PATH;
-    }
-    return ProviderFirebase.instance;
+  constructor(PATH) {
+    const init= async ()=>{
+      this.auth = app.auth();
+      await this.auth.setPersistence(this.auth.LOCAL);
+      this.firestore = app.firestore();
+      this.PATH = PATH;
+    };
+    init();
   }
 
   async getAll(limit = 50, filter = null) {
-    return await this.db
+    return await this.firestore
       .collection(this.PATH)
       .limit(limit)
       .get()
@@ -44,7 +38,7 @@ export default class ProviderFirebase {
 
   save(obj) {
     if (obj.key) {
-      return this.db
+      return this.firestore
         .collection(this.PATH)
         .doc(obj.key)
         .update({
@@ -53,7 +47,7 @@ export default class ProviderFirebase {
         })
         .then(() => obj);
     } else {
-      return this.db
+      return this.firestore
         .collection(this.PATH)
         .add({
           dataUpdate: firebase.firestore.Timestamp.fromDate(new Date()),
@@ -66,7 +60,7 @@ export default class ProviderFirebase {
     if (!obj.key) {
       throw "Item não existe";
     } else {
-      return this.db
+      return this.firestore
         .collection(this.PATH)
         .doc(obj.key)
         .delete({
@@ -82,22 +76,61 @@ export default class ProviderFirebase {
     return Provider.db.list(this.PATH).remove(key);
   }
 */
-  loginUser(email, password) {
-   return ProviderFirebase.instance.auth.signInWithEmailAndPassword(email, password);
+  async loginUser(email, password) {
+    return this.auth.signInWithEmailAndPassword(
+      email,
+      password
+    );
   }
   logonUser(email, password) {
-    return ProviderFirebase.instance.auth.createUserWithEmailAndPassword(email, password);
-   }
- 
-  currentUser() {
-   return ProviderFirebase.instance.auth.currentUser;
+    return this.auth.createUserWithEmailAndPassword(
+      email,
+      password
+    );
   }
 
-  
+  currentUser() {
+    return this._parseUser(this.auth.currentUser);
+  }
+
+  async validToken(token) {
+    // idToken comes from the client app
+    return await this.auth.verifyIdToken(token);
+  }
+
+  async getToken() {
+    const tokenResult = await this.auth.currentUser.getIdToken();
+    return tokenResult;
+  }
   resetPassword(email) {
-     return ProviderFirebase.instance.auth.sendPasswordResetEmail(email);
-   }
+    return this.auth.sendPasswordResetEmail(email);
+  }
   logoutUser() {
-     return ProviderFirebase.instance.auth.signOut();
-   }
+    return this.auth.signOut();
+  }
+
+  onLoginChange(cb){
+    
+    this.auth.onAuthStateChanged((user)=>{
+      cb(user);
+    });
+  }
+
+  _parseUser(user) {
+    return {
+      displayName: user.displayName,
+      email: user.email,
+      emailVerified: user.emailVerified,
+      isAnonymous: user.isAnonymous,
+      metadata: user.metadata,
+      multiFactor: user.multiFactor,
+      phoneNumber: user.phoneNumber,
+      photoURL: user.photoURL,
+      providerData: user.providerData,
+      providerId: user.providerId,
+      refreshToken: user.refreshToken,
+      tenantId: user.tenantId,
+      uid: user.uid,
+    };
+  }
 }

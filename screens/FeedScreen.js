@@ -14,8 +14,8 @@ const FeedScreen=()=> {
   );
 }
 
-FeedScreen.navigationOptions = {
-  header: null,
+FeedScreen.navigationOptions = ()=> {
+  return { header: null, }
 };
 
 

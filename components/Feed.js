@@ -43,9 +43,6 @@ const Feed = (props) => {
 
       <View style={styles.icones}>
         <TouchableOpacity>
-          <Ionicons size={30} style={styles.icone} name="ios-heart-empty" />
-        </TouchableOpacity>
-        <TouchableOpacity>
           <Ionicons size={30} style={styles.icone} name="ios-beer" />
         </TouchableOpacity>
       </View>
