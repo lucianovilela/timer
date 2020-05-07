@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Platform, StatusBar, StyleSheet, View, AsyncStorage } from 'react-native';
+import { Platform, StatusBar, StyleSheet, View, AsyncStorage, Text } from 'react-native';
 import { SplashScreen } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
@@ -20,7 +20,7 @@ export default function App(props) {
   const containerRef = React.useRef();
   const provider = React.useRef();
   const { getInitialState } = useLinking(containerRef);
-  const {user, setUser} = React.useState({});
+  const [user, setUser] = React.useState();
   
   // Load any resources or data that we need prior to rendering the app
   React.useEffect(() => {
@@ -37,11 +37,7 @@ export default function App(props) {
         });
 
         provider.current = new  ProviderFirebase("/");
-        
-        provider.current.onLoginChange((u)=>{
-          console.debug(u);
-          setUser(u);}
-        );
+        provider.current.onLoginChange(setUser);
         
 
       } catch (e) {
@@ -63,8 +59,9 @@ export default function App(props) {
       <View style={styles.container}>
 
         {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-        <NavigationContainer ref={containerRef} initialState={initialNavigationState}  >
-          <Stack.Navigator>
+        <Text style={{color:"white"}}>{user && user.email}</Text>
+        <NavigationContainer ref={containerRef} initialState={initialNavigationState}   >
+          <Stack.Navigator  >
             <Stack.Screen name="Root" component={BottomTabNavigator} />
           </Stack.Navigator>
         </NavigationContainer>

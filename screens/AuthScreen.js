@@ -9,7 +9,6 @@ import  PERSISTENCE from  "../constants/Persistence";
 
 const AuthScreen = ({ navigation }) => {
 
-  const [user, setUser] = useState({});
   const provider= useRef();
 
 
@@ -18,11 +17,6 @@ const AuthScreen = ({ navigation }) => {
   },[]);
  
   const usuarioLogadoComSucesso= async()=>{
-   // Alert.alert("Logado", "Usuário logado com sucesso!")
-    const user = await provider.current.currentUser();
-    await AsyncStorage.setItem(PERSISTENCE.USER,   JSON.stringify(user) );
-    await AsyncStorage.setItem(PERSISTENCE.TOKEN, await provider.current.getToken());
-    setUser(user);
     
   }
 
@@ -36,11 +30,6 @@ const AuthScreen = ({ navigation }) => {
 
   return (
     <React.Fragment>
-        <View>
-            <Text>Usuario:{user?
-                   user.displayName?user.displayName:user.email
-                :''}</Text>
-        </View>
       <View style={{justifyContent:"center"}}>
         <TextInput
           name="email"

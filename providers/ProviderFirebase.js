@@ -17,7 +17,6 @@ export default class ProviderFirebase {
   constructor(PATH) {
     const init= async ()=>{
       this.auth = app.auth();
-      await this.auth.setPersistence(this.auth.LOCAL);
       this.firestore = app.firestore();
       this.PATH = PATH;
     };
@@ -110,7 +109,6 @@ export default class ProviderFirebase {
   }
 
   onLoginChange(cb){
-    
     this.auth.onAuthStateChanged((user)=>{
       cb(user);
     });
