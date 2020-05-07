@@ -59,7 +59,6 @@ export default function App(props) {
       <View style={styles.container}>
 
         {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-        <Text style={{color:"white"}}>{user && user.email}</Text>
         <NavigationContainer ref={containerRef} initialState={initialNavigationState}   >
           <Stack.Navigator  >
             <Stack.Screen name="Root" component={BottomTabNavigator} />
