@@ -1,19 +1,24 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import * as React from 'react';
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import * as React from "react";
+import { useSelector } from "react-redux";
 
-import TabBarIcon from '../components/TabBarIcon';
-import FeedScreen from '../screens/FeedScreen';
-import AuthScreen from '../screens/AuthScreen';
-import CameraScreen from '../screens/CameraScreen'
+import TabBarIcon from "../components/TabBarIcon";
+import FeedScreen from "../screens/FeedScreen";
+import AuthScreen from "../screens/AuthScreen";
+import CameraScreen from "../screens/CameraScreen";
 
 const BottomTab = createBottomTabNavigator();
-const INITIAL_ROUTE_NAME = 'Home';
+const INITIAL_ROUTE_NAME = "Home";
 
 export default function BottomTabNavigator({ navigation, route }) {
   // Set the header title on the parent stack navigator depending on the
   // currently active tab. Learn more in the documentation:
   // https://reactnavigation.org/docs/en/screen-options-resolution.html
-  navigation.setOptions({  headerTitle: getHeaderTitle(route) });
+  navigation.setOptions({ headerTitle: getHeaderTitle(route) });
+  const [user, logado] = useSelector((state) => [
+    state.auth.user,
+    state.logado,
+  ]);
 
   return (
     <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}>
@@ -21,47 +26,52 @@ export default function BottomTabNavigator({ navigation, route }) {
         name="Home"
         component={FeedScreen}
         options={{
-          title: 'Feed',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="ios-home" />,
+          title: "Feed",
+          tabBarIcon: ({ focused }) => (
+            <TabBarIcon focused={focused} name="ios-home" />
+          ),
+        }}
+      />
 
-        }
-        }/>
-
-        <BottomTab.Screen
+      <BottomTab.Screen
         name="Camera"
         component={CameraScreen}
         options={{
-          title: '',
-          headerTitle:'Foto',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="ios-add-circle-outline" />,
-          tabBarVisible:false
-        }
-        }/>
-
-      <BottomTab.Screen
-        name="Login"
-        component={AuthScreen}
-        options={{
-          title: 'Login',
-          
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="ios-log-in" />,
+          title: "",
+          headerTitle: "Foto",
+          tabBarIcon: ({ focused }) => (
+            <TabBarIcon focused={focused} name="ios-add-circle-outline" />
+          ),
+          tabBarVisible: false,
         }}
       />
+      
+        <BottomTab.Screen
+          name="Login"
+          component={AuthScreen}
+          options={{
+            title: "Login",
+
+            tabBarIcon: ({ focused }) => (
+              <TabBarIcon focused={focused} name="ios-log-in" />
+            ),
+          }}
+        />
+      
     </BottomTab.Navigator>
   );
 }
 
 function getHeaderTitle(route) {
-  const routeName = route.state?.routes[route.state.index]?.name ?? INITIAL_ROUTE_NAME;
+  const routeName =
+    route.state?.routes[route.state.index]?.name ?? INITIAL_ROUTE_NAME;
 
   switch (routeName) {
-    case 'Home':
-      return 'Cerveja';
-    case 'Camera':
-      return 'Foto'
-    case 'Login':
-      return 'Login';
+    case "Home":
+      return "Cerveja";
+    case "Camera":
+      return "Foto";
+    case "Login":
+      return "Login";
   }
 }
-
-

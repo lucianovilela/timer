@@ -12,17 +12,12 @@ import {
 
 import dimension from "../constants/Layout";
 import { TouchableOpacity, TextInput } from "react-native-gesture-handler";
-import CervejaModal from "./CervejaModal";
 
 const Feed = (props) => {
   const [modalVisible, setModalVisible] = React.useState(false);
 
   return (
     <View>
-      <CervejaModal
-        modalVisible={modalVisible}
-        setModalVisible={setModalVisible}
-      />
       <View style={styles.avatar}>
         <Image
           style={styles.foto_avatar}

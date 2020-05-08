@@ -23,6 +23,7 @@ export default class ProviderFirebase {
     init();
   }
 
+
   async getAll(limit = 50, filter = null) {
     return await this.firestore
       .collection(this.PATH)
