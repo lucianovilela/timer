@@ -65,7 +65,6 @@ export default function RootApp(props) {
     return (
         <View style={styles.container}>
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          {user && <Text style={{backgroundColor:'white'}}>{user.email}</Text>}
           <NavigationContainer ref={containerRef} initialState={initialNavigationState}   >
             <Stack.Navigator  >
               <Stack.Screen name="Root" component={BottomTabNavigator}  />

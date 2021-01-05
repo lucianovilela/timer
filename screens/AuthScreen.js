@@ -44,7 +44,7 @@ const AuthScreen = ({ navigation }) => {
 
   return (
     
-    <React.Fragment>
+    <React.Fragment style={{justifyContent:'center', alignItens:'center' }}>
       {console.debug(logado)}
       {!logado ? (
         <React.Fragment>
