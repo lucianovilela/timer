@@ -37,7 +37,7 @@ const AuthScreen = (props) => {
   const [info, setInfo] = useState({email:"lucianovilela@gmail.com", senha:"123456"});
 
   return (
-    <React.Fragment>
+    <React.Fragment style={{justifyContent:'center', alignItem:'true'}}>
         <View>
             <Text>Usuario:{user?
                    user.displayName?user.displayName:user.email

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Image, StyleSheet, View, TouchableOpacity, Text, ScrollView } from 'react-native';
 import * as MediaLibrary from 'expo-media-library'
 import * as Permissions  from 'expo-permissions';
@@ -8,7 +8,7 @@ import Photo from '../components/Photo';
 
 const PHOTOS_DIR = FileSystem.documentDirectory + 'photos';
 
-export default class GalleryScreen extends React.Component {
+const GalleryScreen =()=> {
   state = {
     faces: {},
     images: {},
@@ -16,12 +16,14 @@ export default class GalleryScreen extends React.Component {
     selected: [],
   };
 
-  componentDidMount = async () => {
+  useEffect(()=>{
+    const componentDidMount = async () => {
     const photos = await FileSystem.readDirectoryAsync(PHOTOS_DIR);
     this.setState({ photos });
-  };
-
-  toggleSelection = (uri, isSelected) => {
+    }
+    componentDidMount();
+  }, []);
+  const toggleSelection = (uri, isSelected) => {
     let selected = this.state.selected;
     if (isSelected) {
       selected.push(uri);
@@ -31,7 +33,7 @@ export default class GalleryScreen extends React.Component {
     this.setState({ selected });
   };
 
-  saveToGallery = async () => {
+  const saveToGallery = async () => {
     const photos = this.state.selected;
 
     if (photos.length > 0) {
@@ -52,14 +54,12 @@ export default class GalleryScreen extends React.Component {
     }
   };
 
-  renderPhoto = fileName => 
+  const renderPhoto = fileName => 
     <Photo
       key={fileName}
       uri={`${PHOTOS_DIR}/${fileName}`}
       onSelectionToggle={this.toggleSelection}
     />;
-
-  render() {
     return (
       <View style={styles.container}>
         <View style={styles.navbar}>
@@ -77,7 +77,6 @@ export default class GalleryScreen extends React.Component {
         </ScrollView>
       </View>
     );
-  }
 }
 
 const styles = StyleSheet.create({
@@ -106,3 +105,5 @@ const styles = StyleSheet.create({
     color: 'white',
   }
 });
+
+export default GalleryScreen;

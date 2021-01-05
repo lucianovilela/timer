@@ -7,17 +7,44 @@ import FeedScreen from "../screens/FeedScreen";
 import AuthScreen from "../screens/AuthScreen";
 import CameraScreen from "../screens/CameraScreen";
 
+import { Image, Text, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+
+
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = "Home";
 
+const UserTitle = ({ user, logado }) => {
+  return (
+    <View>
+      <View style={{flexDirection:"row", }}>
+        <Text>Cervejas que bebi</Text>
+      </View>
+      {user ? (
+        <View>
+          {user.photoURL?
+          <Image size={20} source={{uri:user.photoURL}} />
+          :
+          <Image size={20} source={require("../assets/images/anonimo.png")} />
+          }
+          <Text>{user.displayName?user.displayName:user.email}</Text>
+        </View>
+      ) : (
+        <View></View>
+      )}
+    </View>
+  );
+};
+
 export default function BottomTabNavigator({ navigation, route }) {
-  // Set the header title on the parent stack navigator depending on the
-  // currently active tab. Learn more in the documentation:
-  // https://reactnavigation.org/docs/en/screen-options-resolution.html
-  navigation.setOptions({ headerTitle: getHeaderTitle(route) });
+  navigation.setOptions({
+    headerTitle: (props) => (
+      <UserTitle {...props} user={user} logado={logado} />
+    ),
+  });
   const [user, logado] = useSelector((state) => [
     state.auth.user,
-    state.logado,
+    state.auth.logado,
   ]);
 
   return (
@@ -45,19 +72,18 @@ export default function BottomTabNavigator({ navigation, route }) {
           tabBarVisible: false,
         }}
       />
-      
-        <BottomTab.Screen
-          name="Login"
-          component={AuthScreen}
-          options={{
-            title: "Login",
 
-            tabBarIcon: ({ focused }) => (
-              <TabBarIcon focused={focused} name="ios-log-in" />
-            ),
-          }}
-        />
-      
+      <BottomTab.Screen
+        name="Login"
+        component={AuthScreen}
+        options={{
+          title: "Login",
+
+          tabBarIcon: ({ focused }) => (
+            <TabBarIcon focused={focused} name="ios-log-in" />
+          ),
+        }}
+      />
     </BottomTab.Navigator>
   );
 }
